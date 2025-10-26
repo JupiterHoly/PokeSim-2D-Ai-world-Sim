@@ -1,0 +1,328 @@
+:root {
+  --bg-dark: #0c0b1e;
+  --bg-panel: rgba(24, 22, 48, 0.85);
+  --bg-panel-solid: #14122e;
+  --accent: #ff3b81;
+  --accent-light: #ff7fa9;
+  --text: #f2f2ff;
+  --text-muted: #a6a6c8;
+  --grid: rgba(255, 255, 255, 0.04);
+  font-family: 'Press Start 2P', 'VT323', 'Fira Code', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1b1740 0%, #0c0b1e 60%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, #2c2468 0%, #0c0b1e 70%);
+  color: var(--text);
+  z-index: 100;
+}
+
+.loading-screen .pokeball {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff 49%, #d4003b 51%);
+  border: 6px solid #000;
+  position: relative;
+  animation: spin 2s infinite linear;
+}
+
+.loading-screen .pokeball::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 6px solid #000;
+  background: #fff;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.app.hidden,
+.god-mode-window.hidden,
+.loading-screen.hidden {
+  display: none;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo {
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+}
+
+.top-bar .world-readouts {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.top-bar-actions .pill {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent-light);
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.top-bar-actions .pill:hover,
+.tab-list button:hover {
+  background: var(--accent);
+  color: var(--bg-dark);
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 320px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  background: var(--bg-panel);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+}
+
+.sidebar.right {
+  border-right: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab-list button {
+  flex: 1 1 45%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.tab-list button.active {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.tab-panels {
+  flex: 1;
+  overflow-y: auto;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.tab-panel {
+  display: none;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.canvas-container {
+  position: relative;
+  background: var(--bg-panel-solid);
+}
+
+#world-canvas {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.minimap {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  image-rendering: pixelated;
+}
+
+.info-panel,
+.event-ticker,
+.prayer-feed {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 120px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.event-ticker,
+.prayer-feed {
+  display: grid;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.god-mode-window {
+  position: fixed;
+  top: 120px;
+  right: 64px;
+  width: 380px;
+  background: rgba(18, 16, 40, 0.95);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.45);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  backdrop-filter: blur(16px);
+  cursor: move;
+}
+
+.god-mode-window header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.god-mode-window .tab-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.god-mode-window .tab-buttons button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.god-mode-window .tab-buttons button.active {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+.god-mode-window .tab-content {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px;
+}
+
+label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toggle input[type='checkbox'] {
+  width: 36px;
+  height: 20px;
+}
+
+@media (max-width: 1400px) {
+  .main-layout {
+    grid-template-columns: 280px 1fr 280px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar.left,
+  .sidebar.right {
+    display: none;
+  }
+
+  .canvas-container {
+    min-height: calc(100vh - 64px);
+  }
+
+  .minimap {
+    right: 8px;
+    bottom: 8px;
+  }
+}
