@@ -1,29 +1,31 @@
-# Unofficial Poke Sim
+# PokeSim 2D – AI World Simulator
 
-This project renders a retro-inspired Pokémon world simulation with autonomous trainers, prayers, and a tile-inspired canvas map.
-
-## Running locally
-
-Open `index.html` in any modern browser. All assets load locally and the audio stream is pulled from a CDN.
-
-## Project structure
-
-- `index.html` – base layout, loader, sidebar, canvases, modals, and audio element.
-- `styles/main.css` – retro UI theme, loader animation, sidebar, map, modal, and toast styling.
-- `js/config.js` – shared configuration constants and weather definitions.
-- `js/state.js` – central simulation state and helpers for adjusting runtime config.
-- `js/data.js` – seed data for trainers, Pokémon, events, and helper factories.
-- `js/ui.js` – sidebar/tab controls, stat rendering, toast handling, and display updates.
-- `js/world.js` – simulation loop, tick logic, and seed helpers.
-- `js/map.js` – canvas world renderer, minimap, and camera controls.
-- `js/neural.js` – animated neural network canvas for flair.
-- `js/godMode.js` – modal workflows and god-mode actions.
-- `js/main.js` – bootstraps loading, initializes modules, and exposes UI handlers.
+A modular HTML5 canvas simulation that renders a living Pokémon-inspired world. Trainers and Pokémon roam a procedurally generated biome map while weather, day/night cycles, events, and prayers unfold autonomously. Players can observe the simulation or step into "God Mode" to intervene, create NPCs, and reshape the world.
 
 ## Features
 
-- Animated loading screen with floating Pokéball and sparkles.
-- Modular JS architecture for world ticking, map rendering, and UI updates.
-- God Mode controls to create trainers/NPCs, spawn Pokémon, alter weather, and trigger events.
-- Responsive layout with minimap toggle, prayers/events feeds, and neural visualizer.
+- **Modular engine** powered by an event bus with dedicated managers for world time & weather, trainers, Pokémon ecosystems, UI, map rendering, and divine interventions.
+- **Procedural tilemap** generated with Perlin noise biomes, fog-of-war exploration, zoom & camera controls, and minimap overlay.
+- **Trainer AI** with personality-driven finite states (explore, travel, train, rest, battle), memory tracking, relationships, and autonomous movement.
+- **Wild Pokémon ecology** with roaming behaviour influenced by weather, lightweight leveling & evolution logic, and spawning tied to biome distribution.
+- **Dynamic UI** that mirrors simulation state, includes tabbed dashboards, activity ticker, prayer feed, and persistent world-saving to `localStorage`.
+- **Enhanced God Mode** window for creating trainers, spawning Pokémon, fast-forwarding time, and triggering miracles or disasters.
 
+## Getting Started
+
+1. Open `index.html` in any modern browser. No build step is required.
+2. Wait for the loading screen to disappear—the simulation starts automatically.
+3. Use the left sidebar tabs to inspect the world, trainers, Pokémon, events, prayers, and settings.
+4. Toggle music, God Mode, or save the world using the top-bar buttons. Saved data is stored in the browser under the `pokeSim2d_world` key.
+5. In God Mode you can drag the control window, create trainers, spawn Pokémon, tweak weather, and fire divine interventions.
+
+## Modding Hooks
+
+The codebase is organized into discrete modules under `src/` so it’s easy to extend:
+
+- Add new biomes in `src/data/biomes.js`.
+- Expand the Pokédex in `src/data/pokemonSpecies.js`.
+- Introduce new AI behaviours inside `src/entities/Trainer.js` or by extending `TrainerManager`.
+- Register new UI panels by enhancing `UIManager`.
+
+Enjoy shaping your own retro-inspired Pokémon simulation sandbox!

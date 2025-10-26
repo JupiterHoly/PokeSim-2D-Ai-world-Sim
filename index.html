@@ -1,210 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unofficial Poke Sim</title>
-    <link rel="stylesheet" href="styles/main.css">
-
-</head>
-<body>
-  <div id="loading-screen">
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="sparkle"></div>
-    <div class="pokeball"></div>
-    <div class="loader-title">⚡ UNOFFICIAL POKE SIM</div>
-    <div class="progress-container">
-      <div id="progress-bar" class="progress-bar"></div>
-    </div>
-  </div>
-
-  <div id="game-container">
-    <audio id="bg-music" loop>
-      <source src="https://cdn.jsdelivr.net/gh/thatcatfromspace/pokered-music@main/audio/012%20-%20Pallet%20Town%20Theme.mp3" type="audio/mpeg">
-    </audio>
-
-    <div class="top-bar">
-      <div class="brand"><button class="sidebar-toggle" onclick="toggleSidebar()">☰</button><span>⚡</span>UNOFFICIAL POKE SIM</div>
-      <div class="top-info">
-        <span id="time-text">00:00</span>
-        <span><span id="weather-icon">☀️</span><span id="weather-text">Sunny</span></span>
-        <span id="tick-text">Tick: 0</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokeSim 2D - AI World Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="pokeball"></div>
+        <p>Spinning up the simulation...</p>
       </div>
     </div>
 
-    <div class="layout">
-      <aside class="sidebar" id="sidebar">
-        <div class="tabs">
-          <button data-tab="world" class="active" onclick="switchTab('world')">World</button>
-          <button data-tab="trainers" onclick="switchTab('trainers')">Trainers</button>
-          <button data-tab="pokemon" onclick="switchTab('pokemon')">Pokemon</button>
-          <button data-tab="neural" onclick="switchTab('neural')">Neural</button>
-          <button data-tab="prayers" onclick="switchTab('prayers')">Prayers</button>
-          <button data-tab="events" onclick="switchTab('events')">Events</button>
-          <button data-tab="settings" onclick="switchTab('settings')">Settings</button>
+    <div id="app" class="app hidden">
+      <header class="top-bar">
+        <div class="logo">PokeSim 2D</div>
+        <div class="world-readouts">
+          <span id="time-readout"></span>
+          <span id="weather-readout"></span>
+          <span id="event-readout"></span>
         </div>
-        <div class="tab-content active" id="tab-world">
-          <div class="tab-header">World Stats</div>
-          <div class="stat-grid">
-            <div class="stat-card"><div class="label">Trainers</div><div id="stat-trainers" class="value">0</div></div>
-            <div class="stat-card"><div class="label">Pokemon</div><div id="stat-pokemon" class="value">0</div></div>
-            <div class="stat-card"><div class="label">Battles</div><div id="stat-battles" class="value">0</div></div>
-            <div class="stat-card"><div class="label">Encounters</div><div id="stat-encounters" class="value">0</div></div>
-            <div class="stat-card"><div class="label">Towns</div><div id="stat-towns" class="value">0</div></div>
-            <div class="stat-card"><div class="label">Routes</div><div id="stat-routes" class="value">0</div></div>
+        <div class="top-bar-actions">
+          <button id="toggle-god-mode" class="pill">God Mode</button>
+          <button id="toggle-audio" class="pill">Music</button>
+          <button id="save-world" class="pill">Save World</button>
+        </div>
+      </header>
+
+      <div class="main-layout">
+        <aside class="sidebar left">
+          <nav class="tab-list" id="primary-tabs">
+            <button data-tab="world" class="active">World</button>
+            <button data-tab="trainers">Trainers</button>
+            <button data-tab="pokemon">Pokémon</button>
+            <button data-tab="prayers">Prayers</button>
+            <button data-tab="events">Events</button>
+            <button data-tab="settings">Settings</button>
+          </nav>
+          <div class="tab-panels">
+            <section id="tab-world" class="tab-panel active"></section>
+            <section id="tab-trainers" class="tab-panel"></section>
+            <section id="tab-pokemon" class="tab-panel"></section>
+            <section id="tab-prayers" class="tab-panel"></section>
+            <section id="tab-events" class="tab-panel"></section>
+            <section id="tab-settings" class="tab-panel"></section>
           </div>
-          <div class="tab-actions">
-            <button class="action-button" onclick="document.getElementById('god-modal').classList.add('active')">Enter God Mode</button>
-            <button class="action-button" onclick="changeWeather()">Change Weather</button>
-            <button class="action-button" onclick="timeSkip()">Skip Time +1h</button>
-          </div>
-        </div>
-        <div class="tab-content" id="tab-trainers">
-          <div class="tab-header">Active Trainers</div>
-          <div id="trainers-list" class="list-container"></div>
-        </div>
-        <div class="tab-content" id="tab-pokemon">
-          <div class="tab-header">Pokemon Index</div>
-          <div id="pokemon-list"></div>
-        </div>
-        <div class="tab-content" id="tab-neural">
-          <div class="tab-header">Neural Net Visualizer</div>
-          <canvas id="neural-canvas" width="320" height="220"></canvas>
-          <div id="neural-info">Dynamic neural pathways visualize trainer decision weights. Connections flicker as simulated minds evaluate travel, battle, rest, and prayer responses.</div>
-        </div>
-        <div class="tab-content" id="tab-prayers">
-          <div class="tab-header">Whispers &amp; Prayers</div>
-          <div id="prayers-list"></div>
-        </div>
-        <div class="tab-content" id="tab-events">
-          <div class="tab-header">World Events</div>
-          <div id="events-list"></div>
-        </div>
-        <div class="tab-content" id="tab-settings">
-          <div class="tab-header">Simulation Settings</div>
-          <div class="toggle-row"><span>Background Music</span><button id="toggle-music" class="active" onclick="toggleSetting('music')"></button></div>
-          <div class="toggle-row"><span>Minimap</span><button id="toggle-minimap" class="active" onclick="toggleSetting('minimap')"></button></div>
-          <div class="toggle-row"><span>Auto Prayers</span><button id="toggle-prayers" class="active" onclick="toggleSetting('prayers')"></button></div>
-          <div class="toggle-row"><span>Trainer Paths</span><button id="toggle-paths" class="active" onclick="toggleSetting('paths')"></button></div>
-          <div class="toggle-row"><span>Retro Sprites</span><button id="toggle-sprites" class="active" onclick="toggleSetting('sprites')"></button></div>
-          <div class="toggle-row"><span>Realistic Time</span><button id="toggle-time" class="active" onclick="toggleSetting('time')"></button></div>
-        </div>
-      </aside>
+        </aside>
 
-      <section class="map-container">
-        <div class="map-toolbar">
-          <button onclick="zoomIn()">Zoom +</button>
-          <button onclick="zoomOut()">Zoom -</button>
-          <button onclick="centerCamera()">Center</button>
-        </div>
-        <canvas id="world-canvas"></canvas>
-        <div class="minimap" id="minimap-card">
-          <canvas id="minimap-canvas" width="200" height="200"></canvas>
-        </div>
-      </section>
-    </div>
-  </div>
+        <main class="canvas-container">
+          <canvas id="world-canvas" width="1024" height="1024"></canvas>
+          <canvas id="minimap" class="minimap" width="200" height="200"></canvas>
+        </main>
 
-  <div id="god-modal" class="modal-overlay">
-    <div class="modal">
-      <h2>God Mode</h2>
-      <p style="font-size:0.75rem;color:var(--text-muted);line-height:1.4;">Bend the simulation at will. Spawn beings, alter the skies, or bathe the world in miracles.</p>
-      <div class="modal-actions">
-        <button onclick="openCreateTrainer()">Create Trainer</button>
-        <button onclick="openCreateNPC()">Create NPC</button>
-        <button onclick="createRandomNPC()">Random NPC</button>
-        <button onclick="healAll()">Heal All</button>
+        <aside class="sidebar right">
+          <section class="info-panel" id="info-panel"></section>
+          <section class="event-ticker" id="event-ticker"></section>
+          <section class="prayer-feed" id="prayer-feed"></section>
+        </aside>
       </div>
-      <div class="modal-actions">
-        <button onclick="spawnPokemon()">Spawn Pokemon</button>
-        <button onclick="changeWeather()">Change Weather</button>
-        <button onclick="timeSkip()">Skip Time</button>
-        <button onclick="triggerEvent()">Trigger Event</button>
-      </div>
-      <button class="close-button" onclick="closeModal('god-modal')">Close</button>
     </div>
-  </div>
 
-  <div id="trainer-modal" class="modal-overlay">
-    <div class="modal">
-      <h2>Create Trainer</h2>
-      <form id="trainer-form" onsubmit="createTrainer(event)">
-        <label for="trainer-name">Name</label>
-        <input id="trainer-name" required placeholder="Mira" />
-        <label for="trainer-personality">Personality</label>
-        <select id="trainer-personality">
-          <option>Calm</option>
-          <option>Aggressive</option>
-          <option>Curious</option>
-          <option>Strategist</option>
-          <option>Dreamer</option>
-        </select>
-        <label for="trainer-role">Role</label>
-        <select id="trainer-role">
-          <option>Explorer</option>
-          <option>Gym Leader</option>
-          <option>Breeder</option>
-          <option>Researcher</option>
-          <option>Rival</option>
-        </select>
-        <label for="trainer-starter">Starter Pokemon</label>
-        <select id="trainer-starter">
-          <option>Bulbasaur</option>
-          <option>Charmander</option>
-          <option>Squirtle</option>
-          <option>Pikachu</option>
-          <option>Eevee</option>
-        </select>
-        <label for="trainer-control">Control Type</label>
-        <select id="trainer-control">
-          <option>AI</option>
-          <option>Hybrid</option>
-          <option>Observer</option>
-        </select>
-        <label for="trainer-intelligence">Intelligence <span id="intel-value">60</span></label>
-        <input id="trainer-intelligence" type="range" min="10" max="100" value="60" oninput="document.getElementById('intel-value').textContent = this.value" />
-        <div class="modal-actions">
-          <button type="submit" class="primary">Create</button>
-          <button type="button" onclick="closeModal('trainer-modal')">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
+    <div id="god-mode-window" class="god-mode-window hidden"></div>
 
-  <div id="npc-modal" class="modal-overlay">
-    <div class="modal">
-      <h2>Create NPC</h2>
-      <form id="npc-form" onsubmit="createNPC(event)">
-        <label for="npc-name">Name</label>
-        <input id="npc-name" required placeholder="Old Man Fuji" />
-        <label for="npc-type">Type</label>
-        <select id="npc-type">
-          <option>Merchant</option>
-          <option>Healer</option>
-          <option>Guide</option>
-          <option>Scientist</option>
-          <option>Storyteller</option>
-        </select>
-        <label for="npc-behavior">Behavior</label>
-        <select id="npc-behavior">
-          <option>Wanders</option>
-          <option>Stationary</option>
-          <option>Quest Giver</option>
-          <option>Trainer Mentor</option>
-        </select>
-        <div class="modal-actions">
-          <button type="submit" class="primary">Create</button>
-          <button type="button" onclick="closeModal('npc-modal')">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
+    <audio id="bgm" loop src="assets/ambient-theme.mp3"></audio>
 
-  <div id="toast-container"></div>
-  <script type="module" src="js/main.js"></script>
-
-</body>
+    <script type="module" src="./src/main.js"></script>
+  </body>
 </html>
