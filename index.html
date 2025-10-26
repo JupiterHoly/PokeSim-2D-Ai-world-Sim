@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokeSim 2D - AI World Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="pokeball"></div>
+        <p>Spinning up the simulation...</p>
+      </div>
+    </div>
+
+    <div id="app" class="app hidden">
+      <header class="top-bar">
+        <div class="logo">PokeSim 2D</div>
+        <div class="world-readouts">
+          <span id="time-readout"></span>
+          <span id="weather-readout"></span>
+          <span id="event-readout"></span>
+        </div>
+        <div class="top-bar-actions">
+          <button id="toggle-god-mode" class="pill">God Mode</button>
+          <button id="toggle-audio" class="pill">Music</button>
+          <button id="save-world" class="pill">Save World</button>
+        </div>
+      </header>
+
+      <div class="main-layout">
+        <aside class="sidebar left">
+          <nav class="tab-list" id="primary-tabs">
+            <button data-tab="world" class="active">World</button>
+            <button data-tab="trainers">Trainers</button>
+            <button data-tab="pokemon">Pokémon</button>
+            <button data-tab="prayers">Prayers</button>
+            <button data-tab="events">Events</button>
+            <button data-tab="settings">Settings</button>
+          </nav>
+          <div class="tab-panels">
+            <section id="tab-world" class="tab-panel active"></section>
+            <section id="tab-trainers" class="tab-panel"></section>
+            <section id="tab-pokemon" class="tab-panel"></section>
+            <section id="tab-prayers" class="tab-panel"></section>
+            <section id="tab-events" class="tab-panel"></section>
+            <section id="tab-settings" class="tab-panel"></section>
+          </div>
+        </aside>
+
+        <main class="canvas-container">
+          <canvas id="world-canvas" width="1024" height="1024"></canvas>
+          <canvas id="minimap" class="minimap" width="200" height="200"></canvas>
+        </main>
+
+        <aside class="sidebar right">
+          <section class="info-panel" id="info-panel"></section>
+          <section class="event-ticker" id="event-ticker"></section>
+          <section class="prayer-feed" id="prayer-feed"></section>
+        </aside>
+      </div>
+    </div>
+
+    <div id="god-mode-window" class="god-mode-window hidden"></div>
+
+    <audio id="bgm" loop src="assets/ambient-theme.mp3"></audio>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
